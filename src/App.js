@@ -11,12 +11,12 @@ function App() {
       .then((json) => setData(json));
   }, []);
 
-  const values = Object.values(data);
-  const headings = Object.keys(values[0]).filter(
+  const values = data && Object.values(data).filter(Boolean);
+  const headings = values[0] && Object.keys(values[0]).filter(
     (value) =>
       value === "last_name" || value === "position" || value === "status"
   );
-
+  
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -25,7 +25,7 @@ function App() {
             <table className="min-w-full">
               <thead className="bg-white border-b">
                 <tr>
-                  {headings.map((heading) => (
+                  {headings && headings.map((heading) => (
                     <th
                       scope="col"
                       className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
@@ -36,7 +36,7 @@ function App() {
                 </tr>
               </thead>
               <tbody>
-                {values.map((value) => (
+                {values && values.map((value) => (
                   <tr className="bg-gray-100 border-b">
                       {headings.map(heading => (
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
