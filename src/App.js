@@ -34,14 +34,14 @@ function App() {
   }
 
   return (
-    <div className="w-full bg-gray-50">
+    <div className="w-full bg-indigo-100">
       <div className="flex justify-center">
         <div className="mb-3 xl:w-96">
           <label
-            htmlFor="exampleFormControlInput1"
+            htmlFor="search"
             className="form-label inline-block mb-2 text-gray-700"
           >
-            Example label
+            Search
           </label>
           <input
             type="text"
