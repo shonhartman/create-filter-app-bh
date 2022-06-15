@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
+import DataTable from "./DataTable";
 
 function App() {
-  // https://api.sleeper.app/v1/players/nfl
-
   const [data, setData] = useState([]);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     fetch("https://api.sleeper.app/v1/players/nfl")
@@ -12,44 +12,63 @@ function App() {
   }, []);
 
   const values = data && Object.values(data).filter(Boolean);
-  const headings = values[0] && Object.keys(values[0]).filter(
-    (value) =>
-      value === "last_name" || value === "position" || value === "status"
-  );
-  
+  const headings =
+    values[0] &&
+    Object.keys(values[0]).filter(
+      (value) =>
+        value === "last_name" || value === "position" || value === "status"
+    );
+
+  function search() {
+    if (!values) {
+      return;
+    }
+
+    return values.filter((v) => {
+      return (
+        v?.last_name?.toString().toLowerCase().includes(query?.toString().toLowerCase()) ||
+        v?.status?.toString().toLowerCase().includes(query?.toString().toLowerCase()) ||
+        v?.position?.toString().toLowerCase().includes(query?.toString().toLowerCase())
+      );
+    });
+  }
+
   return (
-    <div className="flex flex-col">
-      <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-          <div className="overflow-hidden">
-            <table className="min-w-full">
-              <thead className="bg-white border-b">
-                <tr>
-                  {headings && headings.map((heading) => (
-                    <th
-                      scope="col"
-                      className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                    >
-                      {heading}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {values && values.map((value) => (
-                  <tr className="bg-gray-100 border-b">
-                      {headings.map(heading => (
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {value[heading]}
-                        </td>
-                      ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+    <div className="w-full bg-gray-50">
+      <div className="flex justify-center">
+        <div className="mb-3 xl:w-96">
+          <label
+            htmlFor="exampleFormControlInput1"
+            className="form-label inline-block mb-2 text-gray-700"
+          >
+            Example label
+          </label>
+          <input
+            type="text"
+            className="
+              form-control
+              block
+              w-full
+              px-3
+              py-1.5
+              text-base
+              font-normal
+              text-gray-700
+              bg-white bg-clip-padding
+              border border-solid border-gray-300
+              rounded
+              transition
+              ease-in-out
+              m-0
+              focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none
+            "
+            id="search"
+            placeholder="Search Here..."
+            onChange={(e) => setQuery(e.target.value)}
+          />
         </div>
       </div>
+      <DataTable headings={headings} values={search(values)} />
     </div>
   );
 }
